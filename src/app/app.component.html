@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-title>Tag Replacer
   </mat-card-title>
-  <form [formGroup]="formGroup">
+  <form [formGroup]="form">
     <mat-form-field appearance="outline">
       <mat-label>Input Text</mat-label>
       <textarea matInput formControlName="inputText"></textarea>
@@ -13,19 +13,27 @@
       <button mat-raised-button color="primary">Remove</button>
     </div>
     <div>
-      <table mat-table [dataSource]="replacementDefinitions">
+      <table mat-table [dataSource]="tableData">
         <ng-container matColumnDef="enabled">
           <th mat-header-cell *matHeaderCellDef>
             <mat-checkbox [indeterminate]="true">
             </mat-checkbox>
           </th>
-          <td mat-cell *matCellDef="let rowData">
-            <mat-checkbox [checked]="rowData.enabled" formArrayName="replacementDefinitions"></mat-checkbox>
+          <td mat-cell *matCellDef="let index = index">
+            <mat-checkbox
+              [formControl]="form.controls.replacementDefinitions.controls[index].controls.enabled"></mat-checkbox>
           </td>
         </ng-container>
         <ng-container matColumnDef="tag">
           <th mat-header-cell *matHeaderCellDef> Tag</th>
-          <td mat-cell *matCellDef="let rowData"> {{rowData.tag}} </td>
+          <td mat-cell *matCellDef="let index = index">
+            <mat-form-field>
+              <input
+                matInput
+                [formControl]="form.controls.replacementDefinitions.controls[index].controls.tag"
+              >
+            </mat-form-field>
+          </td>
         </ng-container>
         <ng-container matColumnDef="replacement">
           <th mat-header-cell *matHeaderCellDef>Replacement</th>
@@ -36,7 +44,7 @@
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
       </table>
     </div>
-    <button mat-raised-button color="primary">Replace</button>
+    <button mat-raised-button color="primary" (click)="pause()">Replace</button>
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Output Text</mat-label>
@@ -46,4 +54,4 @@
   </form>
 </mat-card>
 
-<pre>{{ formGroup.getRawValue() | json }}</pre>
+<pre>{{ form.getRawValue() | json }}</pre>
