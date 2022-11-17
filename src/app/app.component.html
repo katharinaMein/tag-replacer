@@ -1,57 +1,59 @@
 <mat-card>
   <mat-card-title>Tag Replacer
   </mat-card-title>
-  <form [formGroup]="form">
+  <form #form='ngForm'>
     <mat-form-field appearance="outline">
       <mat-label>Input Text</mat-label>
-      <textarea matInput formControlName="inputText"></textarea>
+      <textarea matInput class="form-control" name="inputText" ngModel></textarea>
     </mat-form-field>
     <mat-divider></mat-divider>
     <div>
       <span>Replacements</span>
-      <button mat-raised-button color="primary">Add</button>
-      <button mat-raised-button color="primary">Remove</button>
+      <button mat-raised-button color="primary" (click)="onAddRow()" type="button">Add</button>
+      <button mat-raised-button color="primary" (click)="onRemove()">Remove</button>
     </div>
     <div>
       <table mat-table [dataSource]="tableData">
         <ng-container matColumnDef="enabled">
           <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox [indeterminate]="true">
+            <mat-checkbox name="checkAll" [indeterminate]="true" (click)="onToggleCheckAll()" ngModel>
             </mat-checkbox>
           </th>
-          <td mat-cell *matCellDef="let index = index">
-            <mat-checkbox
-              [formControl]="form.controls.replacementDefinitions.controls[index].controls.enabled"></mat-checkbox>
+          <td mat-cell *matCellDef="let element; let index = index">
+            <mat-checkbox name="checkbox{{index}}" [(ngModel)]="element.enabled" ></mat-checkbox>
           </td>
         </ng-container>
         <ng-container matColumnDef="tag">
           <th mat-header-cell *matHeaderCellDef> Tag</th>
-          <td mat-cell *matCellDef="let index = index">
+          <td mat-cell *matCellDef="let element; let index = index">
             <mat-form-field>
-              <input
-                matInput
-                [formControl]="form.controls.replacementDefinitions.controls[index].controls.tag"
-              >
+              <input matInput name="tagInput{{index}}" [(ngModel)]="element.tag" autocomplete="false">
             </mat-form-field>
           </td>
         </ng-container>
         <ng-container matColumnDef="replacement">
           <th mat-header-cell *matHeaderCellDef>Replacement</th>
-          <td mat-cell *matCellDef="let rowData"> {{rowData.replacement}} </td>
+          <td mat-cell *matCellDef="let index = index">
+            <mat-form-field>
+              <input name="replacement{{index}}" ngModel matInput autocomplete="false">
+            </mat-form-field>
+          </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
       </table>
     </div>
-    <button mat-raised-button color="primary" (click)="pause()">Replace</button>
+    <button mat-raised-button color="primary" (click)="onReplace()">Replace</button>
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Output Text</mat-label>
-        <textarea matInput></textarea>
+        <textarea matInput name="outputText" [(ngModel)]="userInputText" readonly></textarea>
       </mat-form-field>
     </div>
   </form>
+  <button mat-raised-button color="warn" (click)="onPause()">Debug</button>
 </mat-card>
 
-<pre>{{ form.getRawValue() | json }}</pre>
+<pre>{{tableData | json}}</pre>
+
