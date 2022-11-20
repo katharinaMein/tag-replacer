@@ -1,16 +1,17 @@
-<mat-card>
+<mat-card class="main-view">
   <mat-card-title>Tag Replacer
   </mat-card-title>
-  <form #form='ngForm'>
-    <mat-form-field appearance="outline">
+  <form #form='ngForm' (ngSubmit)="onReplace()">
+    <mat-form-field appearance="outline" class="text-area-field">
       <mat-label>Input Text</mat-label>
-      <textarea matInput class="form-control" name="inputText" ngModel></textarea>
+      <textarea cdkTextareaAutosize matInput class="form-control" name="inputText" ngModel="This text contains some {foo} tags that will be replaced. It supports \{escaping} and it ignores {unknown} tags. A literal backslash can be written as well: \\
+Wild \backslashes are removed. Even in front of a \\\\{tag}"></textarea>
     </mat-form-field>
     <mat-divider></mat-divider>
-    <div>
-      <span>Replacements</span>
-      <button mat-raised-button color="primary" (click)="onAddRow()" type="button">Add</button>
-      <button mat-raised-button color="primary" (click)="onRemove()">Remove</button>
+    <div class="button-container">
+      <span class="small-header">Replacements</span>
+      <button mat-raised-button color="primary" (click)="onAddRow()" type="button" class="table-button">Add</button>
+      <button mat-raised-button color="primary" (click)="onRemove()" type="button" class="table-button">Remove</button>
     </div>
     <div>
       <table mat-table [dataSource]="tableData">
@@ -27,15 +28,15 @@
           <th mat-header-cell *matHeaderCellDef> Tag</th>
           <td mat-cell *matCellDef="let element; let index = index">
             <mat-form-field>
-              <input matInput name="tagInput{{index}}" [(ngModel)]="element.tag" autocomplete="false">
+              <input matInput name="tagInput{{index}}" [(ngModel)]="element.tag" autocomplete="false" pattern="[A-Za-z]*[A-Za-z0-9_]*">
             </mat-form-field>
           </td>
         </ng-container>
         <ng-container matColumnDef="replacement">
           <th mat-header-cell *matHeaderCellDef>Replacement</th>
-          <td mat-cell *matCellDef="let index = index">
+          <td mat-cell *matCellDef="let element; let index = index">
             <mat-form-field>
-              <input name="replacement{{index}}" ngModel matInput autocomplete="false">
+              <input name="replacement{{index}}" ngModel matInput autocomplete="false" [(ngModel)]="element.replacement">
             </mat-form-field>
           </td>
         </ng-container>
@@ -44,16 +45,16 @@
         <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
       </table>
     </div>
-    <button mat-raised-button color="primary" (click)="onReplace()">Replace</button>
+    <div class="button-container button-container-centered">
+      <button type="submit" mat-raised-button color="primary" (click)="onReplace()">Replace</button>
+    </div>
     <div>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="text-area-field">
         <mat-label>Output Text</mat-label>
-        <textarea matInput name="outputText" [(ngModel)]="userInputText" readonly></textarea>
+        <textarea cdkTextareaAutosize matInput name="outputText" ngModel readonly></textarea>
       </mat-form-field>
     </div>
   </form>
-  <button mat-raised-button color="warn" (click)="onPause()">Debug</button>
 </mat-card>
 
-<pre>{{tableData | json}}</pre>
 
