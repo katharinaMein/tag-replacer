@@ -9,7 +9,7 @@ import {MatDividerModule} from "@angular/material/divider";
 import {MatButtonModule} from "@angular/material/button";
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -24,7 +24,7 @@ import {ReactiveFormsModule} from "@angular/forms";
     MatButtonModule,
     MatTableModule,
     MatCheckboxModule,
-    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

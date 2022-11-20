@@ -2,34 +2,28 @@ import {Component, ViewChild} from '@angular/core';
 import {ReplacementDefinition} from "./replacement-definition";
 import {MatTable} from "@angular/material/table";
 import {NgForm} from "@angular/forms";
+import {ReplacementService} from "./replacement.service";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.less']
+  styleUrls: ['./app.component.less'],
 })
 export class AppComponent {
 
   @ViewChild(MatTable) table!: MatTable<ReplacementDefinition>;
+  @ViewChild('form') form!: NgForm;
 
   title = 'tag-replacer';
   columnsToDisplay = ['enabled', 'tag', 'replacement'];
-  @ViewChild('form') form!: NgForm;
-  userInputText: string = '';
-  checked: boolean = true;
 
   tableData: ReplacementDefinition[] = [
-    {enabled: false, tag: 'eins', replacement: ''},
-    {enabled: true, tag: 'zwei', replacement: ''},
-    {enabled: false, tag: 'drei', replacement: ''},
-    {enabled: false, tag: 'vier', replacement: ''},
+    {enabled: true, tag: 'foo', replacement: 'bar'},
+    {enabled: true, tag: 'escaping', replacement: 'ERROR'},
+    {enabled: true, tag: 'tag', replacement: '{tag}'}
   ];
 
-  constructor() {
-  }
-
-  onPause() {
-    debugger;
+  constructor(private replacementService: ReplacementService) {
   }
 
   onAddRow() {
@@ -39,25 +33,27 @@ export class AppComponent {
     this.table.renderRows();
   }
 
-  onReplace(){
-    this.userInputText = this.form.controls['inputText'].value;
+  onReplace() {
+    const userInputText = this.form.controls['inputText'].value;
+    const outputText = this.replacementService.replace(userInputText, this.tableData);
+    this.form.controls["outputText"].setValue(outputText);
   }
 
-  onRemove(){
+  onRemove() {
     this.tableData = this.tableData.filter(val => !val.enabled);
   }
 
-  onToggleCheckAll(){
-    if(!this.form.controls['checkAll'].value){
+  onToggleCheckAll() {
+    if (!this.form.controls['checkAll'].value) {
       this.tableData.forEach(element => {
         element.enabled = true;
       })
-    }else{
+    } else {
       this.tableData.forEach(element => {
         element.enabled = false;
       })
     }
     this.table.renderRows();
   }
-
 }
+
