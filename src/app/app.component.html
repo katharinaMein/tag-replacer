@@ -17,11 +17,11 @@ Wild \backslashes are removed. Even in front of a \\\\{tag}"></textarea>
       <table mat-table [dataSource]="tableData">
         <ng-container matColumnDef="enabled">
           <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox name="checkAll" [indeterminate]="true" (click)="onToggleCheckAll()" ngModel>
+            <mat-checkbox (click)="onToggleCheckAll(); $event.preventDefault();" [checked]="areAllRowsEnabled()" [indeterminate]="areOnlySomeRowsEnabled()">
             </mat-checkbox>
           </th>
           <td mat-cell *matCellDef="let element; let index = index">
-            <mat-checkbox name="checkbox{{index}}" [(ngModel)]="element.enabled" ></mat-checkbox>
+            <mat-checkbox name="checkbox{{index}}" [(ngModel)]="element.enabled"></mat-checkbox>
           </td>
         </ng-container>
         <ng-container matColumnDef="tag">
@@ -56,5 +56,3 @@ Wild \backslashes are removed. Even in front of a \\\\{tag}"></textarea>
     </div>
   </form>
 </mat-card>
-
-

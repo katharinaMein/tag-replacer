@@ -15,11 +15,10 @@ export class ReplacementService {
     const outputText = userInputText.replace(new RegExp( `([^\\\\])?${tagsIfAny}|(\\\\\\\\)|(\\\\[^\\\\]?)`, "g"),
       (match: string, cgOptionalCharBeforeTag = "", cgTag?: string, cgDoubleBackslash?: string, cgWildBackslash?: string) => {
         // cg = capture group
-
         if(match === "\\\\") {
           return "\\";
         }
-        if(cgWildBackslash != undefined) {
+        if(cgWildBackslash !== undefined) {
           return cgWildBackslash.replace(/\\/g, "");
         }
 

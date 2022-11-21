@@ -9,6 +9,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatTableModule} from "@angular/material/table";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ReplacementDefinition} from "./replacement-definition";
 
 describe('AppComponent', () => {
 
@@ -36,12 +37,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it(`should have as title 'tag-replacer'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('tag-replacer');
   });
 
   it('should render title', () => {
@@ -104,11 +99,23 @@ describe('AppComponent', () => {
       expect(component.form.controls["outputText"].value).toBe(expectedOutput);
     })
 
-    // wenn tags = [], drücke replace => dann kein Error
-    // tests für add row
-    // remove rows - disbale remove button when no rows enabled
-    // only enabled rows replace
-    // validation
-    // checkAllCheckbox checked wenn alle Checkboxen checked
+    it('should log no error when tags are empty', () => {
+      const inputText = 'Some text\\\\';
+      const expectedOutput = 'Some text\\';
+      const emptyTags: ReplacementDefinition[] = [];
+
+      component.form.controls['inputText'].setValue(inputText);
+      component.tableData = emptyTags;
+      component.onReplace();
+
+      expect(component.form.controls['outputText'].value).toBe(expectedOutput);
+    })
   })
-});
+})
+
+
+// tests für add row
+// remove rows - disbale remove button when no rows enabled
+// only enabled rows replace
+// validation
+// checkAllCheckbox checked wenn alle Checkboxen checked

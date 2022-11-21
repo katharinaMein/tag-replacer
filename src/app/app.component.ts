@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
 import {ReplacementDefinition} from "./replacement-definition";
 import {MatTable} from "@angular/material/table";
 import {NgForm} from "@angular/forms";
@@ -8,13 +8,13 @@ import {ReplacementService} from "./replacement.service";
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
 
   @ViewChild(MatTable) table!: MatTable<ReplacementDefinition>;
   @ViewChild('form') form!: NgForm;
 
-  title = 'tag-replacer';
   columnsToDisplay = ['enabled', 'tag', 'replacement'];
 
   tableData: ReplacementDefinition[] = [
@@ -23,14 +23,10 @@ export class AppComponent {
     {enabled: true, tag: 'tag', replacement: '{tag}'}
   ];
 
-  constructor(private replacementService: ReplacementService) {
-  }
+  constructor(private replacementService: ReplacementService) {}
 
   onAddRow() {
-    this.tableData.push({
-      enabled: false, tag: '', replacement: ''
-    });
-    this.table.renderRows();
+    this.tableData = [...this.tableData, {enabled: false, tag: '', replacement: ''}];
   }
 
   onReplace() {
@@ -44,16 +40,23 @@ export class AppComponent {
   }
 
   onToggleCheckAll() {
-    if (!this.form.controls['checkAll'].value) {
-      this.tableData.forEach(element => {
-        element.enabled = true;
-      })
-    } else {
-      this.tableData.forEach(element => {
-        element.enabled = false;
-      })
+    if (this.areAllRowsEnabled()) {
+      this.tableData = this.setTableRows({enabled: false});
+    } else if (!this.areAllRowsEnabled() || this.areOnlySomeRowsEnabled()) {
+      this.tableData = this.setTableRows({enabled: true});
     }
-    this.table.renderRows();
+  }
+
+  areAllRowsEnabled(): boolean {
+    return this.tableData?.every(value => value.enabled === true);
+  }
+
+  areOnlySomeRowsEnabled(): boolean {
+    return this.tableData?.some(value => value.enabled) && this.tableData?.some(value => !value.enabled);
+  }
+
+  private setTableRows(update: Partial<ReplacementDefinition>) {
+    return this.tableData.map(row => ({...row, ...update}));
   }
 }
 
