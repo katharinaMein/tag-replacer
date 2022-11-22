@@ -113,9 +113,3 @@ describe('AppComponent', () => {
   })
 })
 
-
-// tests für add row
-// remove rows - disbale remove button when no rows enabled
-// only enabled rows replace
-// validation
-// checkAllCheckbox checked wenn alle Checkboxen checked

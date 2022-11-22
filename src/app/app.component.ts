@@ -55,6 +55,10 @@ export class AppComponent {
     return this.tableData?.some(value => value.enabled) && this.tableData?.some(value => !value.enabled);
   }
 
+  areAnyRowsEnabled(): boolean {
+    return this.tableData?.some(value => value.enabled);
+  }
+
   private setTableRows(update: Partial<ReplacementDefinition>) {
     return this.tableData.map(row => ({...row, ...update}));
   }
